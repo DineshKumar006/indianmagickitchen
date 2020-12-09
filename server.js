@@ -10,12 +10,14 @@ app.use(express.json())
 
 const recipeData=require('./src/router/dataRouter')
 
-app.use('/',async(req,res)=>{
-    res.send('Welcome to Indian Magic Kitchen!')
-})
+
 
 app.use('/api/recipe',recipeData)
 
+
+app.use('/',async(req,res)=>{
+    res.send('Welcome to Indian Magic Kitchen!')
+})
 app.listen(PORT,()=>{
     console.log('server running on port',PORT)
 })
