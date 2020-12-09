@@ -8,7 +8,10 @@ const DataSchema=mongoose.Schema({
     Steps:[{type:String}],
     RecipeType:{type:String},
     isVeg:{type:Boolean},
-    isNonVeg:{type:Boolean}
+    isNonVeg:{type:Boolean},
+    videoLink:{type:String},
+    Thumbnail:{type:String},
+    ThumbnailId:{type:String}
 })
 
 
