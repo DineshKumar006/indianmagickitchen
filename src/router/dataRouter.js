@@ -2,7 +2,6 @@ const Router=require('express').Router();
 const dataModel=require('../model/dataModel')
 
 
-
 Router.route('/data').post(async(req,res)=>{
     try {
 
