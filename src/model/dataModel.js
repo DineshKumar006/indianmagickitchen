@@ -11,7 +11,8 @@ const DataSchema=mongoose.Schema({
     isNonVeg:{type:Boolean},
     videoLink:{type:String},
     Thumbnail:{type:String},
-    ThumbnailId:{type:String}
+    ThumbnailId:{type:String},
+    Rating:{type:Number}
 })
 
 

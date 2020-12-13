@@ -4,14 +4,14 @@ const fs=require('fs')
 const cloudinary=require('cloudinary').v2
 const {v4:uuid}=require('uuid')
 const multer=require('multer')
+const authMiddleWare=require('../middleware/authMiddleware')
+
+
 cloudinary.config({
     cloud_name:process.env.CLOUD_NAME,
     api_key:process.env.CLOUD_API_KEY,
     api_secret:process.env.CLOUD_API_SECRET
 })
-
-
-
 const imageUpload=multer({
     limits:{
         fileSize:500000
@@ -29,7 +29,7 @@ const imageUpload=multer({
 })
 
 
-Router.route('/addRecipe').post(imageUpload.single('thumbnail'),async(req,res)=>{
+Router.route('/addRecipe').post(authMiddleWare,imageUpload.single('thumbnail'),async(req,res)=>{
     try {
         const result=await cloudinary.uploader.upload(req.file.path,{width:500,height:450, quality: "auto" ,fetch_format:"auto",crop: "scale"})
 
@@ -43,18 +43,23 @@ Router.route('/addRecipe').post(imageUpload.single('thumbnail'),async(req,res)=>
             videoLink:req.body.videoLink,
             Thumbnail:result.secure_url,
             ThumbnailId:result.public_id,
-            
+            Rating:0  
         }
         const newdata=new dataModel(data)
           await newdata.save()
 
           if(req.file){
+            //   console.log(req.file)
             fs.unlinkSync(req.file.path)
           }
 
        
         res.status(201).send({status:'success',data:newdata})
     } catch (error) {
+
+        if(req.file){
+            fs.unlinkSync(req.file.path)
+        }
         console.log(error)
         res.status(500).send({status:'Failed',message:'something went wrong!'})
     }
@@ -74,6 +79,35 @@ Router.route('/getRecipes').get(async(req,res)=>{
 
     }
 })
+
+
+Router.route('/getRecipe/:id').get(async(req,res)=>{
+    try {
+        const data=await dataModel.findOne({_id:req.params.id}).exec()
+
+        res.status(200).send({statue:'success',data})
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({status:'Failed',message:'something went wrong,cehck the id!'})
+
+    }
+})
+
+
+Router.route('/getRecipeByname/:name').get(async(req,res)=>{
+    try {
+
+        const data=await dataModel.findOne({RecipeName:req.params.name}).exec()
+
+        res.status(200).send({statue:'success',data})
+
+    } catch (error) {
+        res.status(500).send({status:'Failed',message:'something went wrong!'})
+
+    }
+})
+
 
 
 module.exports=Router

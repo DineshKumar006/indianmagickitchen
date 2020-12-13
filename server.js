@@ -10,11 +10,12 @@ app.use(express.json())
 
 
 const recipeData=require('./src/router/dataRouter')
-
-
+const commentData=require('./src/router/commentRouter')
+const userData=require('./src/router/userRoute')
 
 app.use('/api/recipe',recipeData)
-
+app.use('/api/comment',commentData)
+app.use('/api/user',userData)
 
 app.get('/',async(req,res)=>{
     res.send('Welcome to Indian Magic Kitchen!')
