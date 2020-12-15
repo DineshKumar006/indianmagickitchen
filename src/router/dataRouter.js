@@ -31,7 +31,7 @@ const imageUpload=multer({
 
 Router.route('/addRecipe').post(authMiddleWare,imageUpload.single('thumbnail'),async(req,res)=>{
     try {
-        const result=await cloudinary.uploader.upload(req.file.path,{width:500,height:450, quality: "auto" ,fetch_format:"auto",crop: "scale"})
+        const result=await cloudinary.uploader.upload(req.file.path,{width:6200,height:340, quality: "auto" ,fetch_format:"auto",crop: "scale"})
 
         const data={
             RecipeName:req.body.RecipeName,
