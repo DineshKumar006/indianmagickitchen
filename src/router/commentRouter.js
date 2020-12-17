@@ -16,7 +16,7 @@ Router.route('/addcomment/:id').post(async(req,res)=>{
             RecipeName:req.body.RecipeName,
             Message:req.body.Message,
             Username:req.body.Username,
-            Email:req.body.Email
+            Email:req.body.Email.length>0?req.body.Email:"test@gmail.com"
         }
 
         const newComment=new commentModel(data)

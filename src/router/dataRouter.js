@@ -31,7 +31,7 @@ const imageUpload=multer({
 
 Router.route('/addRecipe').post(authMiddleWare,imageUpload.single('thumbnail'),async(req,res)=>{
     try {
-        const result=await cloudinary.uploader.upload(req.file.path,{width:6200,height:340, quality: "auto" ,fetch_format:"auto",crop: "scale"})
+        const result=await cloudinary.uploader.upload(req.file.path,{width:500,height:400, quality: "auto:best" ,fetch_format:"auto"})
 
         const data={
             RecipeName:req.body.RecipeName,
@@ -43,7 +43,8 @@ Router.route('/addRecipe').post(authMiddleWare,imageUpload.single('thumbnail'),a
             videoLink:req.body.videoLink,
             Thumbnail:result.secure_url,
             ThumbnailId:result.public_id,
-            Rating:0  
+            Rating:0 ,
+            Date:new Date().getTime() 
         }
         const newdata=new dataModel(data)
           await newdata.save()
@@ -68,9 +69,15 @@ Router.route('/addRecipe').post(authMiddleWare,imageUpload.single('thumbnail'),a
 
 
 Router.route('/getRecipes').get(async(req,res)=>{
-    try {
 
-        const data=await dataModel.find({}).exec()
+    const currentPageno=parseInt(req.query.pageno)
+    console.log(typeof currentPageno)
+    try {
+        const itemperPage=4
+        const lastindex=currentPageno * itemperPage
+        const firstindex=lastindex-itemperPage
+
+        const data=await dataModel.find({}).skip(firstindex).limit(lastindex).sort({Date:-1}).exec()
 
         res.status(200).send({statue:'success',data})
 

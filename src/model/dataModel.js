@@ -12,7 +12,12 @@ const DataSchema=mongoose.Schema({
     videoLink:{type:String},
     Thumbnail:{type:String},
     ThumbnailId:{type:String},
-    Rating:{type:Number}
+    Rating:{type:Number},
+    Date:{type:Number}
+
+},
+{
+    timestamps:true
 })
 
 
