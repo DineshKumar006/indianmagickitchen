@@ -1,5 +1,5 @@
 const Router=require('express').Router();
-const sliderimageModel=require('../model/sliderimages')
+const galleryimageModel=require('../model/galleryModel')
 const fs=require('fs')
 const cloudinary=require('cloudinary').v2
 const {v4:uuid}=require('uuid')
@@ -14,7 +14,7 @@ cloudinary.config({
 })
 const imageUpload=multer({
     limits:{
-        fileSize:1000000
+        fileSize:800000
     },
 
     storage:multer.diskStorage({
@@ -28,7 +28,10 @@ const imageUpload=multer({
     })
 })
 
-Router.route('/addSliderimage').post(authMiddleWare,imageUpload.single('sliderimage'),async(req,res)=>{
+
+
+
+Router.route('/addGalleryimage').post(authMiddleWare,imageUpload.single('galleryimage'),async(req,res)=>{
 
     try {
         const result=await cloudinary.uploader.upload(req.file.path,{width:1080,height:500, quality: "auto:best" ,fetch_format:"auto"})
@@ -38,8 +41,8 @@ Router.route('/addSliderimage').post(authMiddleWare,imageUpload.single('sliderim
             Date:new Date().getTime()
         }
 
-    const sliderimage=new sliderimageModel(data)
-        await sliderimage.save()
+    const galleryimage=new galleryimageModel(data)
+        await galleryimage.save()
 
         
         if(req.file){
@@ -47,7 +50,7 @@ Router.route('/addSliderimage').post(authMiddleWare,imageUpload.single('sliderim
             fs.unlinkSync(req.file.path)
           }
 
-    res.status(201).send({status:'success',sliderimage})
+    res.status(201).send({status:'success',galleryimage})
 
 
     } catch (error) {
@@ -60,10 +63,10 @@ Router.route('/addSliderimage').post(authMiddleWare,imageUpload.single('sliderim
 
 })
 
-Router.route('/getSliderimages').get(async(req,res)=>{
+Router.route('/getGalleryimage').get(async(req,res)=>{
     try {
 
-        const data=await sliderimageModel.find({}).sort({Date:-1}).exec()
+        const data=await galleryimageModel.find({}).sort({Date:-1}).exec()
 
         res.status(200).send({status:'success',data})
 
@@ -77,10 +80,10 @@ Router.route('/getSliderimages').get(async(req,res)=>{
 
 
 
-Router.route('/deleteSliderimage/:imageid').delete(authMiddleWare,async(req,res)=>{
+Router.route('/deleteGalleryimage/:imageid').delete(authMiddleWare,async(req,res)=>{
     try {
 
-        const DeletedImage=await sliderimageModel.findByIdAndDelete({_id:req.params.imageid}).exec()
+        const DeletedImage=await galleryimageModel.findByIdAndDelete({_id:req.params.imageid}).exec()
         res.status(200).send({status:'Delete Success',DeletedImage})
 
     } catch (error) {
