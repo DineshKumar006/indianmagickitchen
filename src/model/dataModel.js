@@ -13,6 +13,14 @@ const DataSchema=mongoose.Schema({
     Thumbnail:{type:String},
     ThumbnailId:{type:String},
     Rating:{type:Number},
+    Rateus:{
+        fivestar:{type:Number},
+        fourstar:{type:Number},
+        threestar:{type:Number},
+        twostar:{type:Number},
+        onestar:{type:Number},
+
+    },
     Date:{type:Number}
 
 },

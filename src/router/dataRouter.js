@@ -44,6 +44,13 @@ Router.route('/addRecipe').post(authMiddleWare,imageUpload.single('thumbnail'),a
             Thumbnail:result.secure_url,
             ThumbnailId:result.public_id,
             Rating:0 ,
+            Rateus:{
+                fivestar:0,
+                fourstar:0,
+                threestar:0,
+                twostar:0,
+                onestar:0,
+            },
             Date:new Date().getTime() 
         }
         const newdata=new dataModel(data)
@@ -116,5 +123,27 @@ Router.route('/getRecipeByname/:name').get(async(req,res)=>{
 })
 
 
+
+Router.route('/rateus/:recipeid').patch(async(req,res)=>{
+    try {
+        const data=await dataModel.findOne({_id:req.params.recipeid}).exec()  
+        
+        data.Rateus={
+            fivestar:req.body.fivestar,
+            fourstar:req.body.fourstar,
+            threestar:req.body.threestar,
+            twostar:req.body.twostar,
+            onestar:req.body.onestar,
+        }
+
+        await data.save();
+console.log(data)
+        res.status(201).send({statue:"update sucess",data:data.Rateus})
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({status:'Failed',message:'something went wrong!'})
+    }
+})
 
 module.exports=Router
