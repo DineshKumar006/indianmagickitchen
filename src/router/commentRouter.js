@@ -3,7 +3,11 @@ const Router=require('express').Router()
 const commentModel=require('../model/commentModel')
 
 const HttpError=require('../error Model/errorModel')
+
+
+
 Router.route('/addcomment/:id').post(async(req,res)=>{
+
 
     try {
 
@@ -16,12 +20,14 @@ Router.route('/addcomment/:id').post(async(req,res)=>{
             RecipeName:req.body.RecipeName,
             Message:req.body.Message,
             Username:req.body.Username,
+            Date:new Date().getTime(),
             Email:req.body.Email.length>0?req.body.Email:"test@gmail.com"
         }
 
         const newComment=new commentModel(data)
-
         await newComment.save()
+        
+        console.log(newComment)
 
         res.status(201).send({status:'success',message:newComment})
 
@@ -50,7 +56,7 @@ const firstindex=lastIndex-commentPerPage
 
 
     const recpiceid=req.params.id.trim().split(' ').join('')
-    const comments=await commentModel.find({RecipeId:recpiceid}).skip(firstindex).limit(lastIndex).exec()
+    const comments=await commentModel.find({RecipeId:recpiceid}).skip(firstindex).limit(lastIndex).sort({Date:1}).exec()
         
     if(comments.length===0){
         throw new HttpError('No comments Available!')
