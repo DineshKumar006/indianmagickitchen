@@ -12,10 +12,11 @@ app.use(express.json())
 const recipeData=require('./src/router/dataRouter')
 const commentData=require('./src/router/commentRouter')
 const userData=require('./src/router/userRoute')
-
+const imageslider=require('./src/router/sliderimagesRouter')
 app.use('/api/recipe',recipeData)
 app.use('/api/comment',commentData)
 app.use('/api/user',userData)
+app.use('/api/imageslider',imageslider)
 
 app.get('/',async(req,res)=>{
     res.send('Welcome to Indian Magic Kitchen!')
