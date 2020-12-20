@@ -26,7 +26,7 @@ Router.route('/addcomment/:id').post(async(req,res)=>{
 
         const newComment=new commentModel(data)
         await newComment.save()
-        
+
         console.log(newComment)
 
         res.status(201).send({status:'success',message:newComment})
@@ -56,7 +56,7 @@ const firstindex=lastIndex-commentPerPage
 
 
     const recpiceid=req.params.id.trim().split(' ').join('')
-    const comments=await commentModel.find({RecipeId:recpiceid}).skip(firstindex).limit(lastIndex).sort({Date:1}).exec()
+    const comments=await commentModel.find({RecipeId:recpiceid}).skip(firstindex).limit(lastIndex).sort({Date:-1}).exec()
         
     if(comments.length===0){
         throw new HttpError('No comments Available!')
